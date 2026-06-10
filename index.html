@@ -4,62 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skin Navi</title>
-
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
-<style>
-body{
-    font-family:sans-serif;
-    text-align:center;
-    padding:40px 20px;
-}
-
-.loading{
-    margin-top:40px;
-    color:#666;
-}
-</style>
 </head>
 
 <body>
-
-<h2>Skin Navi</h2>
-<p class="loading">適性チェックへ移動しています...</p>
+<p>適性チェックへ移動しています...</p>
 
 <script>
-
 const LIFF_ID = "2010346977-4n3dqZ8W";
-
-/*
-ここは後でGASのURLを入れる
-*/
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxave3AV5qWV3OQJ9gEu7gSpUtO_tafAJZanW5BSHuJBOVfcq6HxkpveF9nIMGJHCMB/exec";
-    
-async function main(){
+const FORMRUN_URL = "https://form.run/@skinnavi-jp-CR7EDbX35vKjsdbnqz7G";
 
-    await liff.init({
-        liffId: LIFF_ID
-    });
+async function main() {
+  await liff.init({ liffId: LIFF_ID });
 
-    if(!liff.isLoggedIn()){
-        liff.login();
-        return;
-    }
+  if (!liff.isLoggedIn()) {
+    liff.login();
+    return;
+  }
 
-    const profile = await liff.getProfile();
+  const profile = await liff.getProfile();
 
-    const url =
-        GAS_URL +
-        "?action=issue" +
-        "&userId=" + encodeURIComponent(profile.userId) +
-        "&displayName=" + encodeURIComponent(profile.displayName);
+  window.receiveSkinId = function(data) {
+    const formUrl =
+      FORMRUN_URL +
+      "?skin_id=" +
+      encodeURIComponent(data.skinId);
 
-    location.href = url;
+    location.href = formUrl;
+  };
+
+  const script = document.createElement("script");
+  script.src =
+    GAS_URL +
+    "?callback=receiveSkinId" +
+    "&userId=" + encodeURIComponent(profile.userId) +
+    "&displayName=" + encodeURIComponent(profile.displayName);
+
+  document.body.appendChild(script);
 }
 
 main();
-
 </script>
-
 </body>
 </html>
