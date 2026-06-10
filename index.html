@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skin Navi</title>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+<style>
+body{
+    font-family:sans-serif;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.loading{
+    margin-top:40px;
+    color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Skin Navi</h2>
+<p class="loading">適性チェックへ移動しています...</p>
+
+<script>
+
+const LIFF_ID = "2010346977-4n3dqZ8W";
+
+/*
+ここは後でGASのURLを入れる
+*/
+const GAS_URL = "あとで変更";
+
+async function main(){
+
+    await liff.init({
+        liffId: LIFF_ID
+    });
+
+    if(!liff.isLoggedIn()){
+        liff.login();
+        return;
+    }
+
+    const profile = await liff.getProfile();
+
+    const url =
+        GAS_URL +
+        "?action=issue" +
+        "&userId=" + encodeURIComponent(profile.userId) +
+        "&displayName=" + encodeURIComponent(profile.displayName);
+
+    location.href = url;
+}
+
+main();
+
+</script>
+
+</body>
+</html>
